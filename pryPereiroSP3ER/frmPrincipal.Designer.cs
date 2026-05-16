@@ -41,11 +41,12 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 489);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 523);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(817, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1100, 32);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -53,7 +54,7 @@
             // 
             this.toolStripStatusLabel1.ForeColor = System.Drawing.Color.Gray;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(92, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(141, 25);
             this.toolStripStatusLabel1.Text = "● Desconectado";
             // 
             // tabTodoPlast
@@ -65,43 +66,43 @@
             this.tabTodoPlast.Location = new System.Drawing.Point(0, 2);
             this.tabTodoPlast.Name = "tabTodoPlast";
             this.tabTodoPlast.SelectedIndex = 0;
-            this.tabTodoPlast.Size = new System.Drawing.Size(817, 484);
+            this.tabTodoPlast.Size = new System.Drawing.Size(1100, 518);
             this.tabTodoPlast.TabIndex = 1;
             this.tabTodoPlast.Tag = "";
             // 
             // tabAgregar
             // 
-            this.tabAgregar.Location = new System.Drawing.Point(4, 22);
+            this.tabAgregar.Location = new System.Drawing.Point(4, 38);
             this.tabAgregar.Name = "tabAgregar";
             this.tabAgregar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAgregar.Size = new System.Drawing.Size(809, 458);
+            this.tabAgregar.Size = new System.Drawing.Size(1092, 476);
             this.tabAgregar.TabIndex = 0;
             this.tabAgregar.Text = "Registrar";
             this.tabAgregar.UseVisualStyleBackColor = true;
             // 
             // tabListar
             // 
-            this.tabListar.Location = new System.Drawing.Point(4, 22);
+            this.tabListar.Location = new System.Drawing.Point(4, 38);
             this.tabListar.Name = "tabListar";
             this.tabListar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabListar.Size = new System.Drawing.Size(809, 458);
+            this.tabListar.Size = new System.Drawing.Size(809, 442);
             this.tabListar.TabIndex = 1;
             this.tabListar.Text = "Listar";
             this.tabListar.UseVisualStyleBackColor = true;
             // 
             // tabEliminar
             // 
-            this.tabEliminar.Location = new System.Drawing.Point(4, 29);
+            this.tabEliminar.Location = new System.Drawing.Point(4, 38);
             this.tabEliminar.Name = "tabEliminar";
             this.tabEliminar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEliminar.Size = new System.Drawing.Size(809, 451);
+            this.tabEliminar.Size = new System.Drawing.Size(809, 442);
             this.tabEliminar.TabIndex = 2;
             this.tabEliminar.Text = "Eliminar";
             this.tabEliminar.UseVisualStyleBackColor = true;
             // 
             // frmPrincipal
             // 
-            this.ClientSize = new System.Drawing.Size(817, 511);
+            this.ClientSize = new System.Drawing.Size(1100, 555);
             this.Controls.Add(this.tabTodoPlast);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
