@@ -255,6 +255,7 @@
             this.btnListar.TabIndex = 4;
             this.btnListar.Text = "Listar";
             this.btnListar.UseVisualStyleBackColor = false;
+            this.btnListar.Click += new System.EventHandler(this.btnListar_Click);
             // 
             // Eliminar
             // 
@@ -308,6 +309,7 @@
             this.cmbTabla.Name = "cmbTabla";
             this.cmbTabla.Size = new System.Drawing.Size(175, 28);
             this.cmbTabla.TabIndex = 2;
+            this.cmbTabla.SelectedIndexChanged += new System.EventHandler(this.cmbTabla_SelectedIndexChanged);
             // 
             // lblTabla
             // 
@@ -320,9 +322,11 @@
             // 
             // dgvListar
             // 
+            this.dgvListar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvListar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvListar.Location = new System.Drawing.Point(6, 60);
             this.dgvListar.Name = "dgvListar";
+            this.dgvListar.RowHeadersVisible = false;
             this.dgvListar.RowHeadersWidth = 62;
             this.dgvListar.RowTemplate.Height = 28;
             this.dgvListar.Size = new System.Drawing.Size(834, 368);

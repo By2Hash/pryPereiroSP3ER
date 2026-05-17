@@ -9,37 +9,30 @@ namespace pryPereiroSP3ER
     {
         private ConexionDB _db;
         private clsMaquinas _maquinas;        // ← AGREGAR acá, junto a _db
+        private clsOrdenProduccion _ordenes;
 
         public frmPrincipal()
         {
             InitializeComponent();
             _db = new ConexionDB(statusStrip1);
             _maquinas = new clsMaquinas(_db); // ← AGREGAR acá, junto a _db
+            _ordenes = new clsOrdenProduccion(_db);
+            cmbTabla.SelectedIndexChanged += cmbTabla_SelectedIndexChanged;
+            btnListar.Click += btnListar_Click;
         }
 
-        private void CargarComboMaquinas()
+        private void CargarComboTablas()
         {
-            if (_db.Abrir())
-            {
-                // Usamos el nombre de la tabla que aparece en tus capturas
-                string query = "SELECT IdMaquina, Nombre FROM Maquinas";
-
-                DataTable dt = _db.EjecutarConsulta(query);
-
-                if (dt.Rows.Count > 0)
-                {
-                    cmbTabla.DataSource = dt;
-                    cmbTabla.DisplayMember = "Nombre";    // Lo que el usuario lee
-                    cmbTabla.ValueMember = "IdMaquina";   // El ID real para la DB
-                }
-
-                _db.Cerrar();
-            }
+            cmbTabla.Items.Clear();
+            cmbTabla.Items.Add("Maquinas");
+            cmbTabla.Items.Add("OrdenesProduccion");
+            cmbTabla.SelectedIndex = 0; // selecciona la primera por defecto
         }
 
         private void FormPrincipal_Load(object sender, EventArgs e)
         {
             _db.Abrir();
+            CargarComboTablas();
         }
 
         private void FormPrincipal_FormClosing(object sender, FormClosingEventArgs e)
@@ -148,6 +141,132 @@ namespace pryPereiroSP3ER
                 MessageBox.Show("No se pudo registrar la máquina.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            // Si hay datos en el grupo Máquinas, guarda máquina
+            if (!string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                !string.IsNullOrWhiteSpace(txtCapacidad.Text))
+            {
+                GuardarMaquina();
+            }
+            // Si hay datos en el grupo Órdenes, guarda orden
+            else if (!string.IsNullOrWhiteSpace(txtIdOrden.Text) ||
+                     !string.IsNullOrWhiteSpace(txtDescripcion.Text))
+            {
+                GuardarOrden();
+            }
+            else
+            {
+                MessageBox.Show("Complete al menos un formulario.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void cmbTabla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListarTablaSeleccionada();
+
+        }
+
+        private void ListarTablaSeleccionada()
+        {
+            if (cmbTabla.SelectedItem == null) return;
+
+            string tabla = cmbTabla.SelectedItem.ToString();
+            string query = $"SELECT * FROM dbo.{tabla} ORDER BY 1"; // ORDER BY 1 = primera columna
+
+            DataTable dt = _db.EjecutarConsulta(query);
+            dgvListar.DataSource = dt;
+        }
+
+        private void btnListar_Click(object sender, EventArgs e)
+        {
+            ListarTablaSeleccionada();
+        }
+
+
+        private void GuardarMaquina()
+        {
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtCapacidad.Text))
+            {
+                MessageBox.Show("Complete Nombre y Capacidad.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(txtCapacidad.Text.Trim(), out int capacidad))
+            {
+                MessageBox.Show("Capacidad debe ser número entero.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (_maquinas.Insertar(txtNombre.Text.Trim(), capacidad))
+            {
+                MessageBox.Show("Máquina registrada correctamente.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCamposRegistrar();
+            }
+            else
+            {
+                MessageBox.Show("No se pudo registrar la máquina.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void GuardarOrden()
+        {
+            if (string.IsNullOrWhiteSpace(txtIdOrden.Text) ||
+                string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
+                string.IsNullOrWhiteSpace(txtIdMaquinaOP.Text) ||
+                string.IsNullOrWhiteSpace(txtHoraTrabajo.Text))
+            {
+                MessageBox.Show("Complete todos los campos de la orden.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(txtIdMaquinaOP.Text.Trim(), out int idMaquina))
+            {
+                MessageBox.Show("Id Máquina debe ser número entero.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(txtHoraTrabajo.Text.Trim(), out int horas))
+            {
+                MessageBox.Show("Horas de Trabajo deben ser número entero.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!_ordenes.MaquinaExiste(idMaquina))
+            {
+                MessageBox.Show($"No existe una máquina con Id {idMaquina}.", "No encontrado",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (_ordenes.Insertar(txtDescripcion.Text.Trim(), idMaquina, horas))
+            {
+                MessageBox.Show("Orden registrada correctamente.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCamposOrden();
+            }
+            else
+            {
+                MessageBox.Show("No se pudo registrar la orden.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LimpiarCamposOrden()
+        {
+            txtIdOrden.Clear();
+            txtDescripcion.Clear();
+            txtIdMaquinaOP.Clear();
+            txtHoraTrabajo.Clear();
+            txtIdOrden.Focus();
         }
     }   // ← cierre de la clase, ya estaba
 }       // ← cierre del namespace, ya estaba
