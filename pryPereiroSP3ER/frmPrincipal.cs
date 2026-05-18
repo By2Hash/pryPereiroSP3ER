@@ -268,5 +268,117 @@ namespace pryPereiroSP3ER
             txtHoraTrabajo.Clear();
             txtIdOrden.Focus();
         }
+
+        private void Eliminar_Click(object sender, EventArgs e)
+        {
+            bool hayDatosMaquina = !string.IsNullOrWhiteSpace(txtIdMaquina.Text);
+            bool hayDatosOrden = !string.IsNullOrWhiteSpace(txtIdOrden.Text);
+
+            if (!hayDatosMaquina && !hayDatosOrden)
+            {
+                MessageBox.Show("Ingrese el Id de la máquina o de la orden a eliminar.",
+                    "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (hayDatosMaquina)
+                EliminarMaquina();
+            else
+                EliminarOrden();
+        }
+
+        private void EliminarMaquina()
+        {
+            if (string.IsNullOrWhiteSpace(txtIdMaquina.Text) ||
+                string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtCapacidad.Text))
+            {
+                MessageBox.Show("Complete todos los campos de Máquina para eliminar\n" +
+                                "(Id, Nombre y Capacidad).", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(txtIdMaquina.Text.Trim(), out int idMaquina))
+            {
+                MessageBox.Show("El Id Máquina debe ser un número entero.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!_maquinas.Existe(idMaquina))
+            {
+                MessageBox.Show($"No existe ninguna máquina con Id {idMaquina}.", "No encontrado",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show($"¿Eliminar la máquina con Id {idMaquina}?",
+                    "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                != DialogResult.Yes) return;
+
+            if (_maquinas.Eliminar(idMaquina))
+            {
+                MessageBox.Show("Máquina eliminada correctamente.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCamposRegistrar();
+                ListarTablaSeleccionada();
+            }
+            else
+            {
+                MessageBox.Show(
+        "No se pudo eliminar la máquina.\n\n" +
+        "Puede que tenga órdenes de producción asociadas.\n" +
+        "Eliminá primero las órdenes relacionadas.",
+        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void EliminarOrden()
+        {
+            if (string.IsNullOrWhiteSpace(txtIdOrden.Text) ||
+                string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
+                string.IsNullOrWhiteSpace(txtIdMaquinaOP.Text) ||
+                string.IsNullOrWhiteSpace(txtHoraTrabajo.Text))
+            {
+                MessageBox.Show("Complete todos los campos de la Orden para eliminar\n" +
+                                "(Id Orden, Descripción, Id Máquina y Horas de Trabajo).", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(txtIdOrden.Text.Trim(), out int idOrden))
+            {
+                MessageBox.Show("El Id Orden debe ser un número entero.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!_ordenes.Existe(idOrden))
+            {
+                MessageBox.Show($"No existe ninguna orden con Id {idOrden}.", "No encontrado",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show($"¿Eliminar la orden con Id {idOrden}?",
+                    "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                != DialogResult.Yes) return;
+
+            if (_ordenes.Eliminar(idOrden))
+            {
+                MessageBox.Show("Orden eliminada correctamente.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCamposOrden();
+                ListarTablaSeleccionada();
+            }
+            else
+            {
+                MessageBox.Show("No se pudo eliminar la orden.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
     }   // ← cierre de la clase, ya estaba
 }       // ← cierre del namespace, ya estaba

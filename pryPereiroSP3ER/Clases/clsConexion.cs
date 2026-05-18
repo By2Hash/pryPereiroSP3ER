@@ -63,7 +63,11 @@ namespace TodoPlast
             }
             catch (SqlException ex)
             {
-                MostrarEstado($"● Error al ejecutar: {ex.Message}", System.Drawing.Color.Red);
+                // Error 547 = violación de FK
+                if (ex.Number == 547)
+                    MostrarEstado("● Error: tiene registros relacionados", System.Drawing.Color.Red);
+                else
+                    MostrarEstado($"● Error: {ex.Message}", System.Drawing.Color.Red);
                 return false;
             }
         }

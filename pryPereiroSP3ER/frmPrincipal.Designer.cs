@@ -266,6 +266,7 @@
             this.Eliminar.TabIndex = 5;
             this.Eliminar.Text = "Eliminar";
             this.Eliminar.UseVisualStyleBackColor = false;
+            this.Eliminar.Click += new System.EventHandler(this.Eliminar_Click);
             // 
             // tabControl1
             // 
